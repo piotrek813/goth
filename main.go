@@ -1,6 +1,7 @@
 package main
 
 import (
+	middlewares "piotrek813/goth/middlewares/not-found"
 	"piotrek813/goth/routes"
 
 	"github.com/gofiber/fiber/v2"
@@ -12,7 +13,10 @@ func main() {
 
 	app.Use(logger.New())
 
+	app.Static("/public", "./public")
 	routes.RegisterRoutes(app)
+
+	app.Use(middlewares.NotFoundMiddleware)
 
 	app.Listen(":3000")
 }
