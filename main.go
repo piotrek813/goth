@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	middlewares "piotrek813/goth/middlewares/not-found"
 	"piotrek813/goth/migrations"
 	"piotrek813/goth/routes"
@@ -28,5 +29,5 @@ func main() {
 
 	app.Use(middlewares.NotFoundMiddleware)
 
-	app.Listen(":8080")
+	fmt.Println(app.Listen(":80"))
 }
