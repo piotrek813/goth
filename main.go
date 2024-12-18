@@ -28,5 +28,5 @@ func main() {
 
 	app.Use(middlewares.NotFoundMiddleware)
 
-	app.Listen(":80")
+	app.Listen(":8080")
 }
