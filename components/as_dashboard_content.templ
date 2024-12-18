@@ -1,0 +1,15 @@
+package components
+
+func getClassName(center ...bool) string {
+	if len(center) == 0 || !center[0] {
+		return ""
+	}
+
+	return "my-auto"
+}
+
+templ AsDashboardContent(child templ.Component, center ...bool) {
+	<div id="dashboard-content" class={ getClassName(center...) } hx-swap-oob="true">
+		@child
+	</div>
+}

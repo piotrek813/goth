@@ -1,0 +1,9 @@
+package components
+
+templ Avatar(login string) {
+	if login == "" {
+		<div hx-trigger="load" hx-get="/user/avatar" hx-swap="outerHTML"></div>
+	} else {
+		<img class="w-24 h-24" src={ "https://api.dicebear.com/9.x/adventurer/svg?seed=" + login } alt=""/>
+	}
+}

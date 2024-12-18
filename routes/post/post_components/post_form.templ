@@ -1,0 +1,9 @@
+package postcomponents
+
+templ PostForm() {
+	<form class="flex flex-col gap-4" hx-post="/dashboard/post" hx-swap="none">
+		<input name="title" type="text" placeholder="Type here" class="input input-bordered w-full max-w-xs"/>
+		<textarea name="body" class="textarea textarea-bordered" placeholder="Bio"></textarea>
+		<button class="btn btn-primary">Dodaj</button>
+	</form>
+}

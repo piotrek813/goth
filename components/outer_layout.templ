@@ -1,0 +1,19 @@
+package components
+
+import alertboxcomponent "piotrek813/goth/components/alert_box_component"
+
+templ OuterLayout() {
+	<!DOCTYPE html>
+	<html>
+		<head>
+			<title>GOTH</title>
+			<link rel="stylesheet" href="/public/main.css"/>
+			<script src="https://unpkg.com/htmx.org@2.0.1" integrity="sha384-QWGpdj554B4ETpJJC9z+ZHJcA/i59TyjxEPXiiUgN2WmTyV5OEZWCD6gQhgkdpB/" crossorigin="anonymous"></script>
+			<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+		</head>
+		<body>
+			{ children... }
+			@alertboxcomponent.AlertBox("", alertboxcomponent.Info)
+		</body>
+	</html>
+}

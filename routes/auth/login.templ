@@ -3,8 +3,8 @@ package auth
 import "piotrek813/goth/components"
 
 templ login() {
-	@components.Layout() {
-		<form class="flex flex-col">
+	@components.OuterLayout() {
+		<form class="flex flex-col gap-4 my-20 px-9 max-w-xl mx-auto">
 			<input
 				class="input input-bordered "
 				placeholder="login"
@@ -12,9 +12,15 @@ templ login() {
 				name="login"
 			/>
 			<input class="input input-bordered" type="password" name="password" placeholder="password"/>
-			<span style="color:red"></span>
-			<button class="btn btn-primary" hx-trigger="click" hx-post="/login" hx-swap="none">Log in</button>
-			<button class="btn" hx-trigger="click" hx-post="/signin" hx-target="previous span" hx-swap="innerHTML">Sign in</button>
+			<span class="text-red-400"></span>
+			<button class="btn btn-primary" hx-trigger="click" hx-post="/login" hx-target="previous span" hx-swap="innerHTML" hx-indicator="find .loading">
+				<span class="loading loading-spinner"></span>
+				Log in
+			</button>
+			<button class="btn" hx-trigger="click" hx-post="/signin" hx-target="previous span" hx-swap="innerHTML" hx-indicator="find .loading">
+				<span class="loading loading-spinner"></span>
+				Sign in
+			</button>
 		</form>
 	}
 }

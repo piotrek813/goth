@@ -1,0 +1,9 @@
+<div hx-trigger=\"load\" hx-get=\"/dashboard/post\"></div>
+<div class=\"grid gap-4\">
+<div class=\"card bg-base-100 w-96 shadow-xl\"><div class=\"card-body\"><h2 class=\"card-title\">
+</h2><p>
+</p>
+<div class=\"card-actions justify-end\"><form><input type=\"hidden\" name=\"postId\" value=\"
+\"> <button class=\"btn btn-error\" hx-delete=\"/dashboard/post\" hx-target=\"closest .card\" hx-swap=\"outerHTML\">Usuń</button></form></div>
+</div></div>
+</div>

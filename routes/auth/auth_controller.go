@@ -1,29 +1,16 @@
 package auth
 
 import (
-	"fmt"
-	"piotrek813/goth/components"
+	"log"
+	"net/http"
+	alertboxcomponent "piotrek813/goth/components/alert_box_component"
+	"piotrek813/goth/daos"
+	"piotrek813/goth/models"
+	"piotrek813/goth/session"
 	"piotrek813/goth/utils"
 
 	"github.com/gofiber/fiber/v2"
-	"golang.org/x/crypto/bcrypt"
 )
-
-var users = make(map[string]string)
-
-func verifyLogin(login string, password string) bool {
-	return checkPasswordHash(password, users[login])
-}
-
-func hashPassword(password string) (string, error) {
-	bytes, err := bcrypt.GenerateFromPassword([]byte(password), 14)
-	return string(bytes), err
-}
-
-func checkPasswordHash(password, hash string) bool {
-	err := bcrypt.CompareHashAndPassword([]byte(hash), []byte(password))
-	return err == nil
-}
 
 func checkPasswordValid(password string) (bool, string) {
 	if len(password) < 8 {
@@ -32,6 +19,7 @@ func checkPasswordValid(password string) (bool, string) {
 
 	return true, ""
 }
+
 func RegisterRoutes(app *fiber.App) {
 	app.Get("/login", func(c *fiber.Ctx) error {
 		return utils.Render(c, login())
@@ -41,12 +29,35 @@ func RegisterRoutes(app *fiber.App) {
 		login := c.FormValue("login")
 		password := c.FormValue("password")
 
-		if verifyLogin(login, password) {
-			msg := fmt.Sprintf("Hello, %v\n your hashed password: %v", login, users[login])
-			return utils.Render(c, components.AlertBox(msg))
+		user, _ := daos.FindUserByLogin(login)
+
+		if user == nil || !user.VerifyPassword(password) {
+			return c.SendString("Account not found")
 		}
 
-		return utils.Render(c, components.AlertBox("Account not found"))
+		sess, _ := session.Store.Get(c)
+
+		sess.Set("login", login)
+
+		sess.Set("user_id", user.Id)
+
+		if err := sess.Save(); err != nil {
+			return utils.Render(c, alertboxcomponent.AlertBox("Couldn't login"))
+		}
+
+		c.Append("HX-Redirect", "/dashboard")
+		return c.SendStatus(http.StatusOK)
+	})
+
+	app.Get("/logout", func(c *fiber.Ctx) error {
+		sess, _ := session.Store.Get(c)
+
+		if err := sess.Destroy(); err != nil {
+			return utils.Render(c, alertboxcomponent.AlertBox("Couldn't logout"))
+		}
+
+		c.Append("HX-Redirect", "/login")
+		return c.SendStatus(http.StatusOK)
 	})
 
 	app.Post("/signin", func(c *fiber.Ctx) error {
@@ -57,18 +68,21 @@ func RegisterRoutes(app *fiber.App) {
 			return c.SendString(err)
 		}
 
-		if users[login] != "" {
-			return utils.Render(c, components.AlertBox("Account already exists"))
+		user, _ := daos.FindUserByLogin(login)
+
+		if user != nil {
+			return c.SendString("Account with this login already exists")
 		}
 
-		hashedPassword, err := hashPassword(password)
+		user = &models.User{Login: login}
 
-		if err != nil {
-			utils.Render(c, components.AlertBox("Something went wrong"))
+		if err := user.SetPassword(password); err != nil {
+			log.Println(err)
+			utils.Render(c, alertboxcomponent.AlertBox("Something went wrong"))
 		}
 
-		users[login] = hashedPassword
+		daos.SaveUser(user)
 
-		return utils.Render(c, components.AlertBox("Account created"))
+		return utils.Render(c, alertboxcomponent.AlertBox("Account created"))
 	})
 }

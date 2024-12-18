@@ -1,0 +1,3 @@
+<div hx-trigger=\"load\" hx-get=\"/user/avatar\" hx-swap=\"outerHTML\"></div>
+<img class=\"w-24 h-24\" src=\"
+\" alt=\"\">

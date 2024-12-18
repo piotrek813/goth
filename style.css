@@ -1,0 +1,15 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+#alert-box.htmx-added {
+	@apply opacity-100;
+}
+
+.loading {
+	display: none;
+}
+
+.htmx-request.loading {
+	display: inline;
+}

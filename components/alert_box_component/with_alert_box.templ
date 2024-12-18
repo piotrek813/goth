@@ -1,0 +1,6 @@
+package alertboxcomponent
+
+templ WithAlertBox(sibling templ.Component, text string, alertType ...int) {
+	@AlertBox(text, alertType...)
+	@sibling
+}

@@ -1,0 +1,11 @@
+package components
+
+templ MainLayout() {
+	@OuterLayout() {
+		@Sidebar() {
+			<div id="dashboard-content">
+				{ children... }
+			</div>
+		}
+	}
+}

@@ -1,0 +1,12 @@
+package dashboardcomponents
+
+import (
+	"piotrek813/goth/components"
+	postcomponents "piotrek813/goth/routes/post/post_components"
+)
+
+templ Dashboard() {
+	@components.MainLayout() {
+		@postcomponents.PostList(nil)
+	}
+}

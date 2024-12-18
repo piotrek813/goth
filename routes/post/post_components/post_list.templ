@@ -1,0 +1,31 @@
+package postcomponents
+
+import (
+	"piotrek813/goth/models"
+	"strconv"
+)
+
+templ PostList(posts []models.Post, userId ...int) {
+	if posts == nil {
+		<div hx-trigger="load" hx-get="/dashboard/post"></div>
+	} else {
+		<div class="grid gap-4">
+			for _, post := range posts {
+				<div class="card bg-base-100 w-96 shadow-xl">
+					<div class="card-body">
+						<h2 class="card-title">{ post.Title }</h2>
+						<p>{ post.Body }</p>
+						if len(userId) > 0 && userId[0] == post.UserId {
+							<div class="card-actions justify-end">
+								<form>
+									<input type="hidden" name="postId" value={ strconv.Itoa(post.Id) }/>
+									<button class="btn btn-error" hx-delete="/dashboard/post" hx-target="closest .card" hx-swap="outerHTML">Usuń</button>
+								</form>
+							</div>
+						}
+					</div>
+				</div>
+			}
+		</div>
+	}
+}

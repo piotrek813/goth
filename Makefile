@@ -2,7 +2,7 @@ dev/templ:
 	templ generate --watch --proxy="http://localhost:3000"
 
 dev/tailwind:
-	npx tailwindcss -o ./public/output.css --watch
+	npm run tailwind
 
 dev/server:
 	air \
@@ -12,7 +12,7 @@ dev/server:
 	--build.stop_on_error "false" \
 	--misc.clean_on_exit true
 
-live/sync_assets:
+dev/sync_assets:
 	air \
 	--build.cmd "templ generate --notify-proxy" \
 	--build.bin "true" \
@@ -21,6 +21,6 @@ live/sync_assets:
 	--build.include_dir "public" \
 	--build.include_ext "js,css"
 
-# start all 5 watch processes in parallel.
-dev: 
-	make -j5 dev/templ dev/server live/tailwind
+dev:
+	# for whatever reason dev/tailwind has to be the first thing to run
+	make -j4 dev/tailwind dev/templ dev/server dev/sync_assets
